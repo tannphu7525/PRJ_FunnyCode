@@ -4,19 +4,21 @@
  */
 package models;
 
+import java.sql.Date;
+
 /**
  *
  * @author admin
  */
 public class UserDTO {
-    private String Id;
+    private int Id;
     private String fullName;
-    private String gender;
-    private String DOB;
+    private boolean gender;
+    private Date DOB;
     private String email;
     private String phone;
 
-    public UserDTO(String Id, String fullName, String gender, String DOB, String email, String phone) {
+    public UserDTO(int Id, String fullName, boolean gender, Date DOB, String email, String phone) {
         this.Id = Id;
         this.fullName = fullName;
         this.gender = gender;
@@ -25,11 +27,11 @@ public class UserDTO {
         this.phone = phone;
     }
 
-    public String getId() {
+    public int getId() {
         return Id;
     }
 
-    public void setId(String Id) {
+    public void setId(int Id) {
         this.Id = Id;
     }
 
@@ -41,19 +43,19 @@ public class UserDTO {
         this.fullName = fullName;
     }
 
-    public String getGender() {
+    public boolean isGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(boolean gender) {
         this.gender = gender;
     }
 
-    public String getDOB() {
+    public Date getDOB() {
         return DOB;
     }
 
-    public void setDOB(String DOB) {
+    public void setDOB(Date DOB) {
         this.DOB = DOB;
     }
 
@@ -72,6 +74,6 @@ public class UserDTO {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    
-    
+
+
 }

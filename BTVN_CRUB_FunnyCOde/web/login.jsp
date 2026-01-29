@@ -43,9 +43,8 @@
                         <td>${u.email}</td>
                         <td>${u.phone}</td>
                         <td>
-                            <a href="update.jsp?id=${u.id}">Edit</a> |
-                            <a href="MainController?action=delete&id=${u.id}" onclick="return confirm('Are you sure?')">Delete</a>
-                        </td>
+                            <a href="controller?action=edit&id=${u.id}">Edit</a>
+                            <a href="controller?action=delete&id=${u.id}" onclick="return confirm('Are you sure?')">Delete</a>
                         </td>
                     </tr>
                     </c:forEach>

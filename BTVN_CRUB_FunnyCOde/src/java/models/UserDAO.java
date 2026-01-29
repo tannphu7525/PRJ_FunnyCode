@@ -43,9 +43,23 @@ public class UserDAO {
     }
 
     //2 - Create
-    
-    
-    
+    public boolean insertUser(UserDTO user) {
+        String sql = "INSERT INTO [dbo].[User] (FullName, Gender, DOB, Email, Phone) VALUES (?, ?, ?, ?, ?)";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, user.getFullName());
+            stm.setBoolean(2, user.isGender());
+            stm.setDate(3, user.getDOB());
+            stm.setString(4, user.getEmail());
+            stm.setString(5, user.getPhone());
+            return stm.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     //Helper for update
     public UserDTO getUserById(int id) {
         String sql = "SELECT * FROM [dbo].[User] WHERE ID = ?";
@@ -66,19 +80,17 @@ public class UserDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;        
+        return null;
     }
 
-    
-    
     public boolean updateUser(UserDTO user) {
-        String sql = "UPDATE [dbo].[User]\n" +
-                    "   SET [FullName] = ?\n" +
-                    "      ,[Gender] = ?\n" +
-                    "      ,[DOB] = ?\n" +
-                    "      ,[Email] = ?\n" +
-                    "      ,[Phone] = ?\n" +
-                    " WHERE ID = ?";
+        String sql = "UPDATE [dbo].[User]\n"
+                + "   SET [FullName] = ?\n"
+                + "      ,[Gender] = ?\n"
+                + "      ,[DOB] = ?\n"
+                + "      ,[Email] = ?\n"
+                + "      ,[Phone] = ?\n"
+                + " WHERE ID = ?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement stm = conn.prepareStatement(sql);
@@ -95,11 +107,9 @@ public class UserDAO {
         return false;
     }
 
-
-    
     //4- Delete
     public boolean deleteUserById(int id) {
-        String sql = "SELECT * FROM [dbo].[User] WHERE ID = ?";
+        String sql = "DELETE FROM [dbo].[User] WHERE ID = ?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement stm = conn.prepareStatement(sql);

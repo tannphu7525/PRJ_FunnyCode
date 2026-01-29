@@ -5,7 +5,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,19 +22,51 @@ public class MainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8"); // Fix lỗi font tiếng Việt khi input
 
         String action = request.getParameter("action");
         UserDAO dao = new UserDAO();
-        
+
         if (action == null || action.equals("list")) {
             List<UserDTO> list = dao.getAllUser();
-            
             request.setAttribute("USER_LIST", list);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
             
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+        } else if (action.equals("create")) { 
+            String fullName = request.getParameter("fullName");
+            boolean gender = "male".equals(request.getParameter("gender")); 
+            java.sql.Date dob = java.sql.Date.valueOf(request.getParameter("dob"));
+            String email = request.getParameter("email");
+            String phone = request.getParameter("phone");
+
+            
+            UserDTO user = new UserDTO(0, fullName, gender, dob, email, phone);
+            dao.insertUser(user);
+            response.sendRedirect("controller?action=list");
+            
+        } else if (action.equals("delete")) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            dao.deleteUserById(id);
+            response.sendRedirect("controller?action=list");
+            
+        } else if (action.equals("edit")) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            UserDTO user = dao.getUserById(id);
+            request.setAttribute("USER", user);
+            request.getRequestDispatcher("update.jsp").forward(request, response);
+            
+        } else if (action.equals("update")) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            String fullName = request.getParameter("fullName");
+            boolean gender = "male".equals(request.getParameter("gender"));
+            java.sql.Date dob = java.sql.Date.valueOf(request.getParameter("dob"));
+            String email = request.getParameter("email");
+            String phone = request.getParameter("phone");
+
+            UserDTO user = new UserDTO(id, fullName, gender, dob, email, phone);
+            dao.updateUser(user);
+            response.sendRedirect("controller?action=list");
         }
-        
     }
 
     @Override
@@ -49,10 +80,4 @@ public class MainController extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

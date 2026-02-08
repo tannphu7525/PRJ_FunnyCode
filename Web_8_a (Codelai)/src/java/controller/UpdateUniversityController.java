@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller;
 
 import java.io.IOException;
@@ -15,35 +14,34 @@ import model.UniversityDAO;
 import model.UniversityDTO;
 
 public class UpdateUniversityController extends HttpServlet {
-   
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        
+
         String id = request.getParameter("id");
         UniversityDAO dao = new UniversityDAO();
-        
-        UniversityDTO check = dao.getUniversityById(id);
-        
-        request.setAttribute("university", check);
+        UniversityDTO u = dao.getUniversityById(id);
+
+        request.setAttribute("u", u);
         request.getRequestDispatcher("updateUniversity.jsp").forward(request, response);
-    } 
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-       String err = "";
+            throws ServletException, IOException {
+        String err = "";
         String mess = "";
-        String url = "university_form.jsp";
-        
+        String url = "updateUniversity.jsp";
+
         try {
             String id = request.getParameter("id");
             String name = request.getParameter("name");
@@ -106,29 +104,20 @@ public class UpdateUniversityController extends HttpServlet {
 
             UniversityDAO dao = new UniversityDAO();
 
-            // Check duplicate ID only if ID is valid
-            if (id != null && !id.trim().isEmpty()) {
-                UniversityDTO existingU = dao.searchById(id);
-                if (existingU != null) {
-                    err += "ID da ton tai, Vui long nhap ID khac<br/>";
-                }
-            }
-
             // Only proceed if no errors
             if (err.isEmpty()) {
                 UniversityDTO u = new UniversityDTO(id, name, shortName, description,
                         s_foundedYear, address, city, region, type,
                         s_totalStudents, s_totalFaculties, s_isDraft);
 
-                if (dao.add(u)) {
-                    response.sendRedirect("search?mess=Them thanh cong!");
+                if (dao.updateUniversity(u)) {
+                    response.sendRedirect("main?action=search&keywords=&mess=Cap nhat thanh cong!");;
                     return;
                 } else {
-                    err = "Gap loi khi them University<br/>";
+                    err = "Gap loi khi cap nhat University<br/>";
                 }
             }
 
-            // If there are errors, preserve form data
             if (!err.isEmpty()) {
                 UniversityDTO u = new UniversityDTO(id, name, shortName, description,
                         s_foundedYear, address, city, region, type,
@@ -141,7 +130,7 @@ public class UpdateUniversityController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             err = "Loi he thong: " + e.getMessage();
-        request.setAttribute("err", err);
+            request.setAttribute("err", err);
         }
 
         request.getRequestDispatcher(url).forward(request, response);

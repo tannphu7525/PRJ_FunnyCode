@@ -13,26 +13,31 @@
         <title>JSP Page</title>
     </head>
     <body>
-         <jsp:include page="welcome.jsp" />
-         
-         <c:if test="${empty user}">
-             <c:redirect url = "login.jsp"/>
-            </c:if>
-         
-         <br/>
-         <a href="university_form.jsp" style="display: inline;">Insert</a> <br/>
-         
-         
-         <c:if test="${not empty mess}">
-             <p style="color: green; font-weight: bold;">${mess}</p>
-         </c:if>
-         <c:if test="${not empty messEr}">
-             <p style="color: red; font-weight: bold;">${messEr}</p>
-         </c:if>
-         
-       <c:if test="${not empty user}">
+        <jsp:include page="welcome.jsp" />
 
-           <form action="main" method="POST">
+        <c:if test="${empty user}">
+            <c:redirect url = "login.jsp"/>
+        </c:if>
+
+        <br/>
+        <a href="university_form.jsp" style="display: inline;">Insert</a> <br/>
+
+
+        <c:if test="${not empty mess}">
+            <p style="color: green; font-weight: bold;">${mess}</p>
+        </c:if>
+            
+        <c:if test="${not empty param.mess}">
+            <p style="color: green; font-weight: bold;">${param.mess}</p>
+        </c:if>
+            
+        <c:if test="${not empty messEr}">
+            <p style="color: red; font-weight: bold;">${messEr}</p>
+        </c:if>
+
+        <c:if test="${not empty user}">
+
+            <form action="main" method="POST">
                 <input type="hidden" name="action" value="search"/>
                 Input name:
                 <input type="text" name="keywords" value="${keywords}" />
@@ -73,12 +78,7 @@
                             <td>${u.totalStudents}</td>
                             <td>${u.totalFaculties}</td>
                             <td>
-                                <form action="main" method="POST"
-                                      onsubmit = "return confirm('Bạn có chắc chắn muốn cập nhật không?');">
-                                    <input type="hidden" name="action" value="update" />
-                                    <input type="hidden" name="id" value="${u.id}" />
-                                    <input type="submit" value="Update" />
-                                </form>                                  
+                                <a href="main?action=update&id=${u.id}">Update</a>
                             </td>
                             <td>
                                 <form action="main" method="POST"

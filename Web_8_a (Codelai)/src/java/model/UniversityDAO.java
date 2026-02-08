@@ -104,9 +104,9 @@ public class UniversityDAO {
         int result = 0;
         try {
             Connection conn = DBUtils.getConnection();
-            String sql = "UPDATE [dbo].[tblUniversity]\n" +
-                    "   SET [status] = 0\n" +
-                    " WHERE id = ?";
+            String sql = "UPDATE [dbo].[tblUniversity]\n"
+                    + "   SET [status] = 0\n"
+                    + " WHERE id = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, id);
             result = stm.executeUpdate();
@@ -120,34 +120,34 @@ public class UniversityDAO {
         int result = 0;
         try {
             Connection conn = DBUtils.getConnection();
-            String sql = "INSERT INTO [dbo].[tblUniversity]\n" +
-                            "    ([id]\n" +
-                            "    ,[name]\n" +
-                            "    ,[shortName]\n" +
-                            "    ,[description]\n" +
-                            "    ,[foundedYear]\n" +
-                            "    ,[address]\n" +
-                            "    ,[city]\n" +
-                            "    ,[region]\n" +
-                            "    ,[type]\n" +
-                            "    ,[totalStudents]\n" +
-                            "    ,[totalFaculties]\n" +
-                            "    ,[isDraft]\n" +
-                            "    ,[status])\n" +
-                            "VALUES \n" +
-                            "    (?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?\n" +
-                            "    ,?)";
+            String sql = "INSERT INTO [dbo].[tblUniversity]\n"
+                    + "    ([id]\n"
+                    + "    ,[name]\n"
+                    + "    ,[shortName]\n"
+                    + "    ,[description]\n"
+                    + "    ,[foundedYear]\n"
+                    + "    ,[address]\n"
+                    + "    ,[city]\n"
+                    + "    ,[region]\n"
+                    + "    ,[type]\n"
+                    + "    ,[totalStudents]\n"
+                    + "    ,[totalFaculties]\n"
+                    + "    ,[isDraft]\n"
+                    + "    ,[status])\n"
+                    + "VALUES \n"
+                    + "    (?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?\n"
+                    + "    ,?)";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, u.getId());
             stm.setString(2, u.getName());
@@ -168,21 +168,76 @@ public class UniversityDAO {
         }
         return result > 0;
     }
-    
-    public UniversityDTO getUniversityById(String id){
+
+    public UniversityDTO getUniversityById(String id) {
         UniversityDTO check = null;
         try {
             Connection conn = DBUtils.getConnection();
             String sql = "SELECT * FROM tblUniversity WHERE id = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, id);
-            check = (UniversityDTO) stm.executeQuery();
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return new UniversityDTO(
+                        rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getString("shortName"),
+                        rs.getString("description"),
+                        rs.getInt("foundedYear"),
+                        rs.getString("address"),
+                        rs.getString("city"),
+                        rs.getString("region"),
+                        rs.getString("type"),
+                        rs.getInt("totalStudents"),
+                        rs.getInt("totalFaculties"),
+                        rs.getBoolean("isDraft")
+                );
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return check;
     }
-    public void update(String id){
 
+    //Update
+    // Khong can cap nhat id 
+    public boolean updateUniversity(UniversityDTO u) {
+        int result = 0;
+        try {
+            Connection conn = DBUtils.getConnection();
+            String sql = "UPDATE [dbo].[tblUniversity]\n"
+                    + "   SET [name] = ?\n"
+                    + "      ,[shortName] = ?\n"
+                    + "      ,[description] = ?\n"
+                    + "      ,[foundedYear] = ?\n"
+                    + "      ,[address] = ?\n"
+                    + "      ,[city] = ?\n"
+                    + "      ,[region] = ?\n"
+                    + "      ,[type] = ?\n"
+                    + "      ,[totalStudents] = ?\n"
+                    + "      ,[totalFaculties] = ?\n"
+                    + "      ,[isDraft] = ?\n"
+                    + "      ,[status] = ?\n"
+                    + " WHERE id = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, u.getName());
+            stm.setString(2, u.getShortName());
+            stm.setString(3, u.getDescription());
+            stm.setInt(4, u.getFoundedYear());
+            stm.setString(5, u.getAddress());
+            stm.setString(6, u.getCity());
+            stm.setString(7, u.getRegion());
+            stm.setString(8, u.getType());
+            stm.setInt(9, u.getTotalStudents());
+            stm.setInt(10, u.getTotalFaculties());
+            stm.setBoolean(11, u.isIsDraft());
+            stm.setInt(12, 1);
+            stm.setString(13, u.getId());
+            result = stm.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result > 0;
     }
 }
